@@ -496,7 +496,7 @@ class BaseTrainer:
         if world_size > 1:
             self.model = nn.parallel.DistributedDataParallel(self.model, device_ids=[RANK], find_unused_parameters=True)
             # change new ___________________________________
-            if self.exist_dis is not None:
+            if self.exist_dis:
                 self.Distillation = nn.parallel.DistributedDataParallel(self.Distillation, device_ids=[RANK])
                 self.Distillation.eval()
 
@@ -572,7 +572,7 @@ class BaseTrainer:
             self.plot_idx.extend([base_idx, base_idx + 1, base_idx + 2])
 
         # change new_______________________
-        if self.exist_dis is not None:
+        if self.exist_dis:
             self.Distillation = self.Distillation.to(self.device)
             distillation_loss = Distillation_loss(self.model, self.Distillation, self.layers, distiller=self.loss_type)
 
@@ -600,7 +600,7 @@ class BaseTrainer:
                 pbar = TQDM(enumerate(self.train_loader), total=nb)
             self.tloss = None
             # change new____________________
-            if self.exist_dis is not None:
+            if self.exist_dis:
                 distillation_loss.register_hook()
             for i, batch in pbar:
                 self.run_callbacks("on_train_batch_start")
@@ -627,7 +627,7 @@ class BaseTrainer:
                         (self.tloss * i + self.loss_items) / (i + 1) if self.tloss is not None else self.loss_items
                     )
                     # change new___________________
-                    if self.exist_dis is not None:
+                    if self.exist_dis:
                         distill_weight = (((1 - math.cos(i * math.pi / len(self.train_loader))) / 2) * (0.1 - 1) + 1)*0.01
                         with torch.no_grad():
                             pred = self.Distillation(batch['img'])
@@ -685,7 +685,7 @@ class BaseTrainer:
 
                 self.run_callbacks("on_train_batch_end")
             # change new________________
-            if self.exist_dis is not None:
+            if self.exist_dis:
                 distillation_loss.remove_handle_()
 
             self.lr = {f"lr/pg{ir}": x["lr"] for ir, x in enumerate(self.optimizer.param_groups)}  # for loggers
