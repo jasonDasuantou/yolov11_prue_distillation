@@ -6,7 +6,7 @@ from utils.yolo.attention import add_attention
 root = os.getcwd()
 ## 配置文件路径
 name_yaml = os.path.join(root, "data.yaml")
-name_pretrain = os.path.join(root, "runs/segment/ori/weights/best.pt")
+name_pretrain = os.path.join(root, "yolo11s-seg.pt")
 ## 原始训练路径
 # path_train = os.path.join(root, "runs/detect/VOC")
 name_train = "runs/segment/ori/weights/best.pt"
