@@ -30,7 +30,9 @@ def step2_Constraint_train():
 
 
 def step3_pruning():
-    from utils.yolo.LL_pruning import do_pruning
+    # from utils.yolo.seg_pruning import do_pruning  use for seg
+    from utils.yolo.det_pruning import do_pruning  # use for det
+    # do_pruning(name_prune_before, name_prune_after)
     do_pruning(name_prune_before, name_prune_after)
 
 
@@ -56,6 +58,6 @@ def step5_distillation():
 if __name__ == '__main__':
     # step1_train()
     # step2_Constraint_train()
-    # step3_pruning()
+    step3_pruning()
     # step4_finetune()
-    step5_distillation()
+    # step5_distillation()
